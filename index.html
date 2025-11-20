@@ -128,13 +128,21 @@
 <body>
     <div class="container">
         <h1>Bienvenido</h1>
-        <p>Para comenzar, necesitas ingresar tu Groq API Key</p>
+        <p>Para comenzar, ingresa la información</p>
 
         <div class="error-message" id="errorMessage">
             Por favor, ingresa una API Key válida
         </div>
 
         <div class="input-group">
+            <label for="curso">Nombre del Curso - Modalidad</label>
+            <input 
+                type="text" 
+                id="curso" 
+                placeholder="ej: Física I - Presencial"
+                autocomplete="off"
+            />
+            <p></p>
             <label for="apiKey">Groq API Key</label>
             <input 
                 type="text" 
@@ -142,6 +150,7 @@
                 placeholder="gsk_..."
                 autocomplete="off"
             />
+
         </div>
 
         <button class="continue-btn" id="continueBtn">
@@ -149,25 +158,36 @@
         </button>
 
         <p class="help-text">
-            ¿No tienes una API Key? 
+            ¿No tienes una Groq API Key? 
             <a href="https://console.groq.com/keys" target="_blank">Obtener una aquí</a>
         </p>
     </div>
 
     <script>
+        const cursoInput = document.getElementById('curso');
         const apiKeyInput = document.getElementById('apiKey');
         const continueBtn = document.getElementById('continueBtn');
         const errorMessage = document.getElementById('errorMessage');
 
-        // Load saved API key if exists
+        const savedCurso = localStorage.getItem('curso_nombre');
         const savedApiKey = localStorage.getItem('groq_api_key');
+
+        if (savedCurso) {
+            cursoInput.value = savedCurso;
+        }
         if (savedApiKey) {
             apiKeyInput.value = savedApiKey;
         }
 
-        // Continue button click
         continueBtn.addEventListener('click', () => {
+            const curso = cursoInput.value.trim(); 
             const apiKey = apiKeyInput.value.trim();
+            
+            if (!curso) {
+                errorMessage.textContent = 'Por favor, ingresa el nombre del curso';
+                errorMessage.classList.add('show');
+                return;
+            }
 
             if (!apiKey) {
                 errorMessage.textContent = 'Por favor, ingresa una API Key válida';
@@ -181,21 +201,26 @@
                 return;
             }
 
-            // Save API key to localStorage
+            localStorage.setItem('curso_nombre', curso);
             localStorage.setItem('groq_api_key', apiKey);
 
-            // Redirect to chat page
             window.location.href = 'chat.html';
         });
 
-        // Enter key to continue
+        cursoInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                continueBtn.click();
+            }
+        });
         apiKeyInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 continueBtn.click();
             }
         });
 
-        // Hide error message when typing
+        cursoInput.addEventListener('input', () => {
+            errorMessage.classList.remove('show');
+        });
         apiKeyInput.addEventListener('input', () => {
             errorMessage.classList.remove('show');
         });
