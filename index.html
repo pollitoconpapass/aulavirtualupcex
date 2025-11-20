@@ -169,16 +169,6 @@
         const continueBtn = document.getElementById('continueBtn');
         const errorMessage = document.getElementById('errorMessage');
 
-        const savedCurso = localStorage.getItem('curso_nombre');
-        const savedApiKey = localStorage.getItem('groq_api_key');
-
-        if (savedCurso) {
-            cursoInput.value = savedCurso;
-        }
-        if (savedApiKey) {
-            apiKeyInput.value = savedApiKey;
-        }
-
         continueBtn.addEventListener('click', () => {
             const curso = cursoInput.value.trim(); 
             const apiKey = apiKeyInput.value.trim();
