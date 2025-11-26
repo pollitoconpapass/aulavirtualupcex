@@ -159,6 +159,108 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
          }
 
+         /* Markdown formatting */
+        .message-content h1, 
+        .message-content h2, 
+        .message-content h3 { 
+            margin: 12px 0 8px; 
+            font-weight: 600; 
+        }
+
+        .message-content p {
+            margin: 8px 0;
+        }
+
+        .message-content ul,
+        .message-content ol {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .message-content li {
+            margin: 4px 0;
+        }
+
+        /* Table styling */
+        .message-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 13px;
+            background: white;
+            border: 1px solid #ddd;
+        }
+
+        .message-content th,
+        .message-content td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .message-content th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .message-content tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        /* Code block wrapper */
+        .code-block-wrapper {
+            position: relative;
+            margin: 12px 0;
+        }
+
+        .message-content pre {
+            margin: 0;
+            border-radius: 8px;
+            overflow: auto;
+            background: #1e1e1e;
+            color: #eee;
+            padding: 16px;
+            padding-top: 10px;
+        }
+
+        .message-content code {
+            font-family: 'Courier New', Monaco, monospace;
+            font-size: 13px;
+        }
+
+        .message-content :not(pre) > code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #c7254e;
+        }
+
+        /* Copy button for code blocks */
+        .code-copy-btn {
+            display: flex;
+            top: 4px;
+            right: 4px;
+            background: rgb(239, 238, 238);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            opacity: 0.9;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .code-copy-btn:hover {
+            opacity: 1;
+            background: #5a5a5a;
+        }
+
+        .code-copy-btn.copied {
+            background: #28a745;
+        }
+
          .typing-indicator {
             display: none;
             padding: 12px 16px;
@@ -277,6 +379,7 @@
             background: #999;
          }
       </style>
+
       <style class="vjs-styles-defaults">
          .video-js {
          width: 300px;
@@ -286,6 +389,13 @@
          padding-top: 56.25%
          }
       </style>
+
+      <!-- Para la sintax highlighting -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css"/>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
       <style>@charset "UTF-8";[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>
       <link href="https://aulavirtual.upc.edu.pe/favicon.ico" rel="icon" type="image/x-icon">
       <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui,user-scalable=yes">
@@ -5872,195 +5982,293 @@
                                     </svg>
                                     <span class="text-61">Ayuda para la página actual</span>
 
-                                    <!-- === ACA COMIENZA LA IMPLEMENTACION (HTML) ===-->
-                                    <!-- Chat button -->
-                                    <button class="chat-button" id="chatButton">
-                                       <svg viewBox="0 0 24 24">
-                                             <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
-                                       </svg>
-                                    </button>
+                                       <!-- === ACA COMIENZA LA IMPLEMENTACION (HTML) ===-->
+                                       <!-- Chat button -->
+                                       <button class="chat-button" id="chatButton">
+                                          <svg viewBox="0 0 24 24">
+                                                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                                          </svg>
+                                       </button>
 
-                                    <!-- Chat window -->
-                                    <div class="chat-window" id="chatWindow">
-                                       <div class="chat-header">
-                                             <div class="chat-header-top">
-                                                <button class="close-btn" id="closeBtn">&times;</button>
-                                             </div>
-                                             <select class="model-select" id="modelSelect">
-                                                <option value="openai/gpt-oss-120b">openai/gpt-oss-120b</option>
-                                                <option value="openai/gpt-oss-20b">openai/gpt-oss-20b</option>
-                                                <option value="llama-3.1-8b-instant">llama-3.1-8b-instant</option>
-                                                <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile</option>
-                                             </select>
-                                       </div>
-                                       
-                                       <div class="chat-messages" id="chatMessages">
-                                             <div class="message assistant">
-                                                <div class="message-content">
-                                                   ¡Hola!
+                                       <!-- Chat window -->
+                                       <div class="chat-window" id="chatWindow">
+                                          <div class="chat-header">
+                                                <div class="chat-header-top">
+                                                   <button class="close-btn" id="closeBtn">&times;</button>
                                                 </div>
-                                             </div>
+                                                <select class="model-select" id="modelSelect">
+                                                   <option value="openai/gpt-oss-120b">openai/gpt-oss-120b</option>
+                                                   <option value="openai/gpt-oss-20b">openai/gpt-oss-20b</option>
+                                                   <option value="llama-3.1-8b-instant">llama-3.1-8b-instant</option>
+                                                   <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile</option>
+                                                </select>
+                                          </div>
+                                          
+                                          <div class="chat-messages" id="chatMessages">
+                                                <div class="message assistant">
+                                                   <div class="message-content">
+                                                      ¡Hola!
+                                                   </div>
+                                                </div>
+                                          </div>
+
+                                          <div class="chat-input">
+                                                <input type="text" id="messageInput" placeholder="Escribe tu mensaje..." />
+                                                <button class="send-btn" id="sendBtn">
+                                                   <svg viewBox="0 0 24 24">
+                                                      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                                                   </svg>
+                                                </button>
+                                          </div>
                                        </div>
 
-                                       <div class="chat-input">
-                                             <input type="text" id="messageInput" placeholder="Escribe tu mensaje..." />
-                                             <button class="send-btn" id="sendBtn">
-                                                <svg viewBox="0 0 24 24">
-                                                   <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                                                </svg>
-                                             </button>
-                                       </div>
-                                    </div>
+                                       <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/5.2.12/marked.min.js"></script>
+                                       <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
-                                    <script>
-                                       // Info del curso
-                                       const courseName = localStorage.getItem('curso_nombre');
-                                       const courseTitleElement = document.getElementById('courseTitle');
-
-                                       if (courseName) {
-                                             courseTitleElement.textContent = courseName;
-                                       }
-
-                                       // Info para la IA
-                                       const chatButton = document.getElementById('chatButton');
-                                       const chatWindow = document.getElementById('chatWindow');
-                                       const closeBtn = document.getElementById('closeBtn');
-                                       const messageInput = document.getElementById('messageInput');
-                                       const sendBtn = document.getElementById('sendBtn');
-                                       const chatMessages = document.getElementById('chatMessages');
-                                       const modelSelect = document.getElementById('modelSelect');
-
-                                       // Info de Groq
-                                       const GROQ_API_KEY = localStorage.getItem('groq_api_key');
-                                       const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-                                       let GROQ_MODEL = modelSelect.value;
-
-                                       let conversationHistory = [];
-
-                                       // Cambiar modelo
-                                       modelSelect.addEventListener('change', (e) => {
-                                             GROQ_MODEL = e.target.value;
-                                             console.log('Modelo cambiado a:', currentModel);
-                                       });
-
-                                       chatButton.addEventListener('click', () => {
-                                          chatWindow.classList.toggle('open');
-                                          if (chatWindow.classList.contains('open')) {
-                                             messageInput.focus();
-                                          }
-                                       });
-
-                                       closeBtn.addEventListener('click', () => {
-                                          chatWindow.classList.remove('open');
-                                       });
-
-                                       // Shortcut
-                                       document.addEventListener('keydown', (e) => {
-                                          if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-                                             e.preventDefault();
-                                             chatWindow.classList.toggle('open');
-                                             if (chatWindow.classList.contains('open')) {
-                                                   messageInput.focus();
-                                             }
-                                          }
-                                       });
-
-                                       sendBtn.addEventListener('click', sendMessage);
-
-                                       messageInput.addEventListener('keypress', (e) => {
-                                          if (e.key === 'Enter') {
-                                             sendMessage();
-                                          }
-                                       });
-
-                                       async function sendMessage() {
-                                          const message = messageInput.value.trim();
-                                          if (!message) return;
-
-                                          addMessage(message, 'user');
-                                          messageInput.value = '';
-                                          sendBtn.disabled = true;
-
-                                          const typingIndicator = document.createElement('div');
-                                          typingIndicator.className = 'message assistant';
-                                          typingIndicator.innerHTML = `
-                                             <div class="typing-indicator active">
-                                                   <span></span>
-                                                   <span></span>
-                                                   <span></span>
-                                             </div>
-                                          `;
-                                          chatMessages.appendChild(typingIndicator);
-                                          scrollToBottom();
-
-                                          conversationHistory.push({
-                                             role: 'user',
-                                             content: message
+                                       <script>
+                                          // Configuración de markdown
+                                          marked.setOptions({
+                                                breaks: true,
+                                                gfm: true
                                           });
 
-                                          try {
-                                             const response = await fetch(GROQ_API_URL, {
-                                                   method: 'POST',
-                                                   headers: {
-                                                      'Content-Type': 'application/json',
-                                                      'Authorization': `Bearer ${GROQ_API_KEY}`
-                                                   },
-                                                   body: JSON.stringify({
-                                                      model: GROQ_MODEL,
-                                                      messages: conversationHistory
-                                                   })
-                                             });
+                                          // Info del curso
+                                          const courseName = localStorage.getItem('curso_nombre');
+                                          const courseTitleElement = document.getElementById('courseTitle');
 
-                                             typingIndicator.remove();
-
-                                             if (!response.ok) {
-                                                   throw new Error(`Error: ${response.status}`);
-                                             }
-
-                                             const data = await response.json();
-                                             const assistantMessage = data.choices[0].message.content;
-
-                                             conversationHistory.push({
-                                                   role: 'assistant',
-                                                   content: assistantMessage
-                                             });
-
-                                             addMessage(assistantMessage, 'assistant');
-
-                                          } catch (error) {
-                                             typingIndicator.remove();
-                                             console.error('Error:', error);
-                                             
-                                             const errorDiv = document.createElement('div');
-                                             errorDiv.className = 'error-message';
-                                             errorDiv.textContent = 'Lo siento, ocurrió un error. Por favor, verifica tu API key y vuelve a intentarlo.';
-                                             chatMessages.appendChild(errorDiv);
-                                             scrollToBottom();
+                                          if (courseName) {
+                                                courseTitleElement.textContent = courseName;
                                           }
 
-                                          sendBtn.disabled = false;
-                                       }
+                                          // Info para la IA
+                                          const chatButton = document.getElementById('chatButton');
+                                          const chatWindow = document.getElementById('chatWindow');
+                                          const closeBtn = document.getElementById('closeBtn');
+                                          const messageInput = document.getElementById('messageInput');
+                                          const sendBtn = document.getElementById('sendBtn');
+                                          const chatMessages = document.getElementById('chatMessages');
+                                          const modelSelect = document.getElementById('modelSelect');
 
-                                       function addMessage(text, sender) {
-                                          const messageDiv = document.createElement('div');
-                                          messageDiv.className = `message ${sender}`;
-                                          
-                                          const contentDiv = document.createElement('div');
-                                          contentDiv.className = 'message-content';
-                                          contentDiv.textContent = text;
-                                          
-                                          messageDiv.appendChild(contentDiv);
-                                          chatMessages.appendChild(messageDiv);
-                                          
-                                          scrollToBottom();
-                                       }
+                                          // Info de Groq
+                                          const GROQ_API_KEY = localStorage.getItem('groq_api_key');
+                                          const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+                                          let GROQ_MODEL = modelSelect.value;
 
-                                       function scrollToBottom() {
-                                          chatMessages.scrollTop = chatMessages.scrollHeight;
-                                       }
-                                    </script>
+                                          let conversationHistory = [];
 
-                                 </div>
+                                          // Cambiar modelo
+                                          modelSelect.addEventListener('change', (e) => {
+                                                GROQ_MODEL = e.target.value;
+                                                console.log('Modelo cambiado a:', currentModel);
+                                          });
+
+                                          chatButton.addEventListener('click', () => {
+                                             chatWindow.classList.toggle('open');
+                                             if (chatWindow.classList.contains('open')) {
+                                                messageInput.focus();
+                                             }
+                                          });
+
+                                          closeBtn.addEventListener('click', () => {
+                                             chatWindow.classList.remove('open');
+                                          });
+
+                                          // Shortcut
+                                          document.addEventListener('keydown', (e) => {
+                                             if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                                                e.preventDefault();
+                                                chatWindow.classList.toggle('open');
+                                                if (chatWindow.classList.contains('open')) {
+                                                      messageInput.focus();
+                                                }
+                                             }
+                                          });
+
+                                          sendBtn.addEventListener('click', sendMessage);
+
+                                          messageInput.addEventListener('keypress', (e) => {
+                                             if (e.key === 'Enter') {
+                                                sendMessage();
+                                             }
+                                          });
+
+                                          // ==== CONECTAR CON GROQ ====
+                                          async function sendMessage() {
+                                             const message = messageInput.value.trim();
+                                             if (!message) return;
+
+                                             addMessage(message, 'user');
+                                             messageInput.value = '';
+                                             sendBtn.disabled = true;
+
+                                             const typingIndicator = document.createElement('div');
+                                             typingIndicator.className = 'message assistant';
+                                             typingIndicator.innerHTML = `
+                                                <div class="typing-indicator active">
+                                                      <span></span><span></span><span></span>
+                                                </div>
+                                             `;
+                                             chatMessages.appendChild(typingIndicator);
+                                             scrollToBottom();
+
+                                             conversationHistory.push({ role: 'user', content: message });
+
+                                             try {
+                                                const response = await fetch(GROQ_API_URL, { // -> request
+                                                      method: "POST",
+                                                      headers: {
+                                                         "Content-Type": "application/json",
+                                                         "Authorization": `Bearer ${GROQ_API_KEY}`
+                                                      },
+                                                      body: JSON.stringify({
+                                                         model: GROQ_MODEL,
+                                                         messages: conversationHistory,
+                                                         stream: true
+                                                      })
+                                                });
+
+                                                if (!response.ok || !response.body)
+                                                      throw new Error("Streaming not supported");
+
+                                                const tempDiv = document.createElement('div');
+                                                tempDiv.className = 'message assistant';
+                                                const tempContent = document.createElement('div');
+                                                tempContent.className = 'message-content';
+                                                tempDiv.appendChild(tempContent);
+
+                                                let created = false;
+                                                let finalText = "";
+
+                                                const reader = response.body.getReader();
+                                                const decoder = new TextDecoder();
+                                                let buffer = "";
+
+                                                while (true) {
+                                                   const { value, done } = await reader.read();
+                                                   if (done) break;
+
+                                                   buffer += decoder.decode(value, { stream: true });
+                                                   const parts = buffer.split("\n\n");
+                                                   buffer = parts.pop();
+
+                                                   for (let part of parts) {
+                                                         if (!part.startsWith("data:")) continue;
+
+                                                         part = part.replace("data:", "").trim();
+                                                         if (part === "[DONE]") continue;
+
+                                                         let json;
+                                                         try { 
+                                                            json = JSON.parse(part); 
+                                                         } catch { 
+                                                            continue; 
+                                                         }
+
+                                                         const token = json?.choices?.[0]?.delta?.content;
+                                                         if (!token) continue;
+
+                                                         finalText += token;
+
+                                                         // Mostrar el mensaje parcial
+                                                         if (!created) {
+                                                            typingIndicator.remove();
+                                                            chatMessages.appendChild(tempDiv);
+                                                            created = true;
+                                                         }
+
+                                                         tempContent.textContent += token;
+                                                         scrollToBottom();
+                                                   }
+                                                }
+
+                                                tempDiv.remove();
+                                                addMessage(finalText, "assistant");
+
+                                                conversationHistory.push({
+                                                      role: "assistant",
+                                                      content: finalText
+                                                });
+
+                                             } catch (error) {
+                                                typingIndicator.remove();
+                                                console.error("Error:", error);
+
+                                                const errorDiv = document.createElement("div");
+                                                errorDiv.className = "error-message";
+                                                errorDiv.textContent =
+                                                      "Lo siento, ocurrió un error. Verifica tu API key y vuelve a intentarlo.";
+                                                chatMessages.appendChild(errorDiv);
+                                                scrollToBottom();
+                                             }
+
+                                             sendBtn.disabled = false;
+                                          }
+
+
+                                          function addMessage(text, sender) {
+                                             const messageDiv = document.createElement('div');
+                                             messageDiv.className = `message ${sender}`;
+
+                                             const contentDiv = document.createElement('div');
+                                             contentDiv.className = 'message-content';
+
+                                             if (sender === 'assistant') {
+                                                const html = marked.parse(text);
+                                                contentDiv.innerHTML = html;
+
+                                                const codeBlocks = contentDiv.querySelectorAll('pre code');
+                                                codeBlocks.forEach((block) => {
+                                                   try {
+                                                      hljs.highlightElement(block);
+                                                   } catch (e) {
+                                                      try { hljs.highlightAll(); } catch (e2) {}
+                                                   }
+
+                                                   const pre = block.closest('pre');
+                                                   if (!pre) return;
+
+                                                   if (pre.parentElement && pre.parentElement.classList.contains('code-block-wrapper')) return;
+
+                                                   const wrapper = document.createElement('div');
+                                                   wrapper.className = 'code-block-wrapper';
+
+                                                   const copyBtn = document.createElement('button');
+                                                   copyBtn.className = 'code-copy-btn';
+                                                   copyBtn.innerHTML = '📋';
+
+                                                   copyBtn.addEventListener('click', () => {
+                                                   const code = block.textContent;
+                                                   navigator.clipboard.writeText(code).then(() => {
+                                                      copyBtn.classList.add('copied');
+                                                      copyBtn.innerHTML = '✔';
+                                                      setTimeout(() => {
+                                                         copyBtn.classList.remove('copied');
+                                                         copyBtn.innerHTML = '📋';
+                                                      }, 1200);
+                                                   });
+                                                   });
+
+                                                   pre.parentNode.insertBefore(wrapper, pre);
+                                                   wrapper.appendChild(copyBtn);
+                                                   wrapper.appendChild(pre);
+                                                });
+                                             } else {
+                                                contentDiv.textContent = text;
+                                             }
+
+                                             messageDiv.appendChild(contentDiv);
+                                             chatMessages.appendChild(messageDiv);
+                                             scrollToBottom();
+                                             return messageDiv;
+                                          }
+
+
+                                          function scrollToBottom() {
+                                             chatMessages.scrollTop = chatMessages.scrollHeight;
+                                          }
+                                       </script>
+
+                                    </div>
                               </button>
                            </div>
                         </bb-ui-pagehelp>
