@@ -5980,8 +5980,6 @@
                                                 <select class="model-select" id="modelSelect">
                                                    <option value="openai/gpt-oss-120b">openai/gpt-oss-120b</option>
                                                    <option value="openai/gpt-oss-20b">openai/gpt-oss-20b</option>
-                                                   <option value="llama-3.1-8b-instant">llama-3.1-8b-instant</option>
-                                                   <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile</option>
                                                 </select>
                                           </div>
                                           
@@ -6033,14 +6031,19 @@
                                           // Info de Groq
                                           const GROQ_API_KEY = localStorage.getItem('groq_api_key');
                                           const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+                                          const GROQ_PROMPT = `Eres un asistente de IA experto en el curso de ${courseName}. Tu tarea es brindar la mejor ayuda posible a los estudiantes, respondiendo a sus preguntas y proporcionando explicaciones concisas y directas. Si no sabes la respuesta, di "Lo siento, no sé la respuesta a eso." No inventes información.
+                                                               Trata en lo posible de evitar usar tablas en tus respuestas. Responde en el mismo idioma que el usuario.`;
+
                                           let GROQ_MODEL = modelSelect.value;
 
+                                          // Inicializar conversacion con system prompt
                                           let conversationHistory = [];
+                                          conversationHistory.push({ role: 'system', content: GROQ_PROMPT });
 
                                           // Cambiar modelo
                                           modelSelect.addEventListener('change', (e) => {
                                              GROQ_MODEL = e.target.value;
-                                             console.log('Modelo cambiado a:', currentModel);
+                                             console.log('Modelo cambiado a:', GROQ_MODEL);
                                           });
 
                                           chatButton.addEventListener('click', () => {
@@ -6084,18 +6087,18 @@
 
                                           messageInput.addEventListener('keydown', (e) => {
                                              if (e.key === 'Enter') {
-                                             if (e.shiftKey) {
-                                                const start = e.target.selectionStart;
-                                                const end = e.target.selectionEnd;
-                                                const text = e.target.value;
-                                                e.target.value = text.substring(0, start) + '\n' + text.substring(end);
-                                                e.target.selectionStart = e.target.selectionEnd = start + 1; 
-                                                autoResize(e.target);
-                                                e.preventDefault();
-                                             } else {
-                                                e.preventDefault();
-                                                sendMessage(); 
-                                             }
+                                                if (e.shiftKey) {
+                                                   const start = e.target.selectionStart;
+                                                   const end = e.target.selectionEnd;
+                                                   const text = e.target.value;
+                                                   e.target.value = text.substring(0, start) + '\n' + text.substring(end);
+                                                   e.target.selectionStart = e.target.selectionEnd = start + 1; 
+                                                   autoResize(e.target);
+                                                   e.preventDefault();
+                                                } else {
+                                                   e.preventDefault();
+                                                   sendMessage(); 
+                                                }
                                              }
                                           });
 
